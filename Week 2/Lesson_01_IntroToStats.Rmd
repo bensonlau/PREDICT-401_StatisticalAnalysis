@@ -1,0 +1,188 @@
+---
+title: "Lesson 01: Introduction to Statistics"
+output: html_notebook
+---
+References
+    • Black, Chapter 1 Introduction to Statistics (pp. 1-9), Chapter 2 Charts and Graphs (pp. 15-34)
+    • Kabakoff, Chapter 2.2.5 Factors (pp. 30), Chapter 5.2.3 Setting the Seed for RNG (pp. 96)
+    • Davies, Chapter 2.3 Vectors (pp. 23-27), Chapter 8.2 Reading in External Data Files (pp 153-154)
+    • Stowell, Chapter 3 Selecting a Random Sample from a Dataset (pp. 44)
+    
+Data set: home_prices.csv
+
+Description: This data file is derived from a random sample of home resale records maintained by realtors.
+
+There are 117 observations and eight variables:
+    1. PRICE = Selling price ($hundreds)
+    2. SQFT = Square feet of living space
+    3. YEAR = Year of construction (year)
+    4. BATHS = Number of bathrooms
+    5. FEATS = Number out of 11 features (dishwasher, refrigerator, microwave, disposal, washer,
+    6. NBR = Located in northeast sector of city (YES) or not (NO)
+    7. CORNER = Corner location (YES) or not (NO)
+    8. TAX = Annual taxes ($)
+
+To read the comma-separated value (.csv) file into R, we can use the read.csv( )function. We will read-in the home_prices.cvs and assign the data frame to "houses."
+
+```{r}
+
+houses <- read.csv("home_prices.csv")
+
+```
+
+R will treat most of the variables as numeric (or integer), but note that the NBR
+and CORNER variables are character strings and the default behavior of the read.csv()
+function is to make these factor variables, with internal codes being NO = 1 and
+YES = 2 (not 0 and 1)
+
+```{r}
+
+#We will examine the structure of the data frame:
+str(houses)
+
+```
+```{r}
+
+#We could look at the first or last few records of the data frame, or at summary
+#statistics using the head(), tail() and summary() functions.
+#?read.csv(), ?str(), ?head(), ?tail(), ?summary() to review documentation pages
+
+?read.csv()
+?str()
+?head() 
+?tail()
+?summary()
+```
+
+Exercises:
+a) What are the measurement levels of each of the eight variables?
+```{r}
+
+#￼PRICE, SQFT, TAX and FEATS are ratio variables; YEAR is an interval variable. Ratio and interval measurements are referred to as quantitative variables and can be either discrete or continuous depending on their nature. FEATS is a count. Since there can be a zero count for FEATS, and the arithmetic difference between two counts is meaningful, FEATS is a discrete quantitative variable at the ratio level. YEAR is an interval variable since there is no firm zero starting time. YEAR equal to zero is by definition or convention.
+
+#BATHS is an ordinal variable; NBR and CORNER are nominal variables. Nominal or ordinal
+#measurements cannot be measured numerically and are referred to as categorical variables.
+#BATHS is not really a count. This is an instance where numbers are assigned to ordered
+#categories. Although there can be zero baths theoretically, the ratios and differences
+#that may be formed are not meaningful. For example, what is meaningful about the ratio
+#between 1.5 baths and 2.5 baths?  From another point of view, is the difference
+#between 2 and 3 baths twice that of between 1.0 and 1.5 baths? Since the ratios and
+#differences are not meaningful, BATHS is categorical at the ordinal level measurement.
+
+```
+b) Should any variable have its values changed to better reflect its true nature?
+
+```{r}
+
+#￼YEAR could be expressed in terms of the age of a house. This would not change its nature since the age would keep changing depending on what was taken to be the present date. BATHS could be expressed in terms of an ordered scale as long as each category in the scale had a definition.
+
+```
+
+c) From the vector “price”, select a simple random sample of size 12. Assign the sample to the name “SRS.”" Print SRS and determine the mean value.
+
+```{r}
+
+#This and the remaining exercises concern the variable PRICE
+#, so we will create # a vector, price
+
+price <- houses$PRICE
+
+#Next, we will select a simple random sample of size 12. However, prior to sampling, 
+#we will seed the random number generator so that results will be reproducible: 
+set.seed(9999)
+
+#We will use the sample() function to select a random sample of size 12, assigning # our n = 12 sample vector to "SRS."
+
+SRS <- sample(price, 12)
+
+#Lastly, we will print the values of SRS and determine its mean
+print(SRS)
+
+```
+```{r}
+
+mean(SRS)
+#?set.seed(), ?sample(), ?print(), ?mean() to review documentation pages
+
+```
+
+d) From the vector “price”, select a systematic sample of twelve observations. Start with the seventh observation and pick every 10th observation thereafter (i.e. 7, 17, 27,). You should end with the 117th observation. Assign the sample vector to “SS.”" Print the values of SS and compute the mean value.
+
+```{r}
+
+#We will select a systematic sample of twelve observations. Starting with the
+#seventh observation, we'll select every 10th observation thereafter (i.e. 7, 17, 27,..)
+#?seq() to review documentation page
+
+SS <- price[seq(from = 7, to = 117, by = 10)]
+
+```
+
+We could verify that the first three and the last value of SS are as expected.
+Each of the below equalities shoudl evaluate to TRUE.
+
+#price[7] == SS[1]
+#price[17] == SS[2]
+#price[27] == SS[3]
+#price[117] == SS[12]
+
+```{r}
+price[7] == SS[1]
+price[17] == SS[2]
+price[27] == SS[3]
+price[117] == SS[12]
+```
+
+#We will print the values of SS and compute its mean:
+
+```{r}
+
+print(SS)
+
+```
+
+```{r}
+
+mean(SS)
+
+```
+
+e) Examine the printed values and mean values obtained from the two sampling procedures. Do you see a difference? Try the commands summary(SRS) and summary(SS).
+```{r}
+
+#In items (c) and (d), we printed the SRS and SS vectors and determined the mean of # each. Here, we will use the summary() function:
+summary(SRS)
+
+```
+
+```{r}
+
+summary(SS)
+
+```
+
+
+￼f) Create histograms and stem-and-leaf plots for SRS and SS using hist() and stem(). How do the two samples compare?
+
+```{r}
+
+#?hist(), ?stem() to review documentation pages
+par(mfrow = c(1, 2)) 
+hist(SRS)
+hist(SS)
+
+```
+
+```{r}
+par(mfrow = c(1, 1))
+
+stem(SRS)
+
+```
+
+
+```{r}
+
+stem(SS)
+
+```
